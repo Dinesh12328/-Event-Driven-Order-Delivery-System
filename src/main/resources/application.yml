@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:${PORT:8080}}
 
 spring:
   application:
@@ -23,6 +23,9 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
       repositories:
         enabled: false
   kafka:
@@ -38,7 +41,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
     admin:
-      auto-create: true
+      auto-create: ${KAFKA_ENABLED:true}
+    listener:
+      auto-startup: ${KAFKA_ENABLED:true}
 
 springdoc:
   swagger-ui:
