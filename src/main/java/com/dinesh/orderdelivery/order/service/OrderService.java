@@ -5,6 +5,7 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
 import com.dinesh.orderdelivery.common.error.BadRequestException;
 import com.dinesh.orderdelivery.common.error.ResourceNotFoundException;
+import com.dinesh.orderdelivery.event.DomainEventPublisher;
 import com.dinesh.orderdelivery.order.domain.CustomerOrder;
 import com.dinesh.orderdelivery.order.domain.OrderItem;
 import com.dinesh.orderdelivery.order.domain.OrderStatus;
@@ -42,6 +43,7 @@ public class OrderService {
     private final MenuItemRepository menuItemRepository;
     private final OrderMapper mapper;
     private final OrderStatusPolicy statusPolicy;
+    private final DomainEventPublisher eventPublisher;
 
     public OrderService(
             OrderRepository orderRepository,
@@ -49,7 +51,8 @@ public class OrderService {
             RestaurantRepository restaurantRepository,
             MenuItemRepository menuItemRepository,
             OrderMapper mapper,
-            OrderStatusPolicy statusPolicy
+            OrderStatusPolicy statusPolicy,
+            DomainEventPublisher eventPublisher
     ) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
@@ -57,6 +60,7 @@ public class OrderService {
         this.menuItemRepository = menuItemRepository;
         this.mapper = mapper;
         this.statusPolicy = statusPolicy;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -84,7 +88,9 @@ public class OrderService {
             total = total.add(item.getLineTotal());
         }
         order.setTotalPrice(total);
-        return mapper.toResponse(orderRepository.save(order));
+        CustomerOrder saved = orderRepository.save(order);
+        eventPublisher.publishOrderPlaced(saved);
+        return mapper.toResponse(saved);
     }
 
     @Transactional(readOnly = true)
@@ -120,9 +126,11 @@ public class OrderService {
     public OrderResponse updateStatus(UUID orderId, OrderStatus nextStatus, String email) {
         CustomerOrder order = findOrder(orderId);
         AppUser user = user(email);
-        statusPolicy.validate(order.getStatus(), nextStatus);
+        OrderStatus previousStatus = order.getStatus();
+        statusPolicy.validate(previousStatus, nextStatus);
         assertCanChangeStatus(order, user, nextStatus);
         order.changeStatus(nextStatus);
+        eventPublisher.publishOrderStatusChanged(order, previousStatus, nextStatus);
         return mapper.toResponse(order);
     }
 
@@ -166,4 +174,3 @@ public class OrderService {
         throw new AccessDeniedException("Role cannot move order to " + nextStatus);
     }
 }
-

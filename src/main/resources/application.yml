@@ -25,6 +25,20 @@ spring:
       port: ${REDIS_PORT:6379}
       repositories:
         enabled: false
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    consumer:
+      group-id: order-delivery
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: com.dinesh.orderdelivery.event
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    admin:
+      auto-create: true
 
 springdoc:
   swagger-ui:
@@ -34,6 +48,8 @@ app:
   jwt:
     secret: ${JWT_SECRET:change-me-to-a-very-long-256-bit-secret-for-production}
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  events:
+    kafka-enabled: ${KAFKA_ENABLED:true}
 
 management:
   endpoints:
