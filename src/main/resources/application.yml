@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: event-driven-order-delivery
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/order_delivery}
+    username: ${DB_USERNAME:order_app}
+    password: ${DB_PASSWORD:order_secret}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    default-property-inclusion: non_null
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
