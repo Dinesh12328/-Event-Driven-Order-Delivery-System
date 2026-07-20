@@ -16,5 +16,6 @@ public interface OrderRepository extends JpaRepository<CustomerOrder, UUID> {
 
     @EntityGraph(attributePaths = {"customer", "restaurant", "restaurant.owner", "items", "items.menuItem"})
     List<CustomerOrder> findByRestaurantIdOrderByCreatedAtDesc(UUID restaurantId);
-}
 
+    List<CustomerOrder> findTop5ByOrderByCreatedAtDesc();
+}

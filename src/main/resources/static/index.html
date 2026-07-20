@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Order Delivery Control Room</title>
+    <link rel="stylesheet" href="/assets/app.css">
+</head>
+<body>
+<main class="shell">
+    <section class="hero">
+        <div>
+            <p class="eyebrow">Event-Driven Order Delivery</p>
+            <h1>Control Room</h1>
+            <p class="lede">Live backend cockpit for restaurants, payments, deliveries, notifications, and Kafka event audit.</p>
+        </div>
+        <form id="loginForm" class="auth-panel">
+            <label>
+                Email
+                <input id="email" type="email" autocomplete="username" value="admin@example.com">
+            </label>
+            <label>
+                Password
+                <input id="password" type="password" autocomplete="current-password" value="Password123!">
+            </label>
+            <button type="submit">Login</button>
+            <p id="authState" class="state-line">Token not loaded</p>
+        </form>
+    </section>
+
+    <section class="status-grid" aria-label="System metrics">
+        <article><span>Health</span><strong id="health">Checking</strong></article>
+        <article><span>Users</span><strong id="users">0</strong></article>
+        <article><span>Orders</span><strong id="orders">0</strong></article>
+        <article><span>Events</span><strong id="events">0</strong></article>
+        <article><span>Payments</span><strong id="payments">0</strong></article>
+        <article><span>Deliveries</span><strong id="deliveries">0</strong></article>
+    </section>
+
+    <section class="stage">
+        <div class="stage-header">
+            <div>
+                <p class="eyebrow">Kafka Flow</p>
+                <h2>Order Journey</h2>
+            </div>
+            <div class="actions">
+                <button id="refresh">Refresh</button>
+                <a href="/swagger-ui.html">Swagger</a>
+            </div>
+        </div>
+        <canvas id="flowCanvas" width="1200" height="520" aria-label="Animated order event flow"></canvas>
+    </section>
+
+    <section class="lower-grid">
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Recent Orders</h2>
+                <span id="orderCount">0 tracked</span>
+            </div>
+            <div id="recentOrders" class="list"></div>
+        </article>
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Event Audit</h2>
+                <span id="eventCount">0 events</span>
+            </div>
+            <div id="eventList" class="list"></div>
+        </article>
+        <article class="panel">
+            <div class="panel-heading">
+                <h2>Restaurants</h2>
+                <span id="restaurantCount">0 active</span>
+            </div>
+            <div id="restaurantList" class="list"></div>
+        </article>
+    </section>
+</main>
+<script src="/assets/app.js"></script>
+</body>
+</html>
+
