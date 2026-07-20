@@ -22,3 +22,5 @@ mvn spring-boot:run
 Open Swagger at `http://localhost:8080/swagger-ui.html` and the dashboard at `http://localhost:8080/`.
 
 Kafka topics are created for `order.placed`, `payment.requested`, `delivery.requested`, `order.status.changed`, and `notification.events`. Consumers use retry topics plus DLT handlers, and `/api/admin/events` exposes the event audit trail for admins.
+
+Payment and delivery simulation endpoints support success/failure, refunds, delivery-agent assignment, ETA tracking, and delivery status updates that keep the order lifecycle consistent.

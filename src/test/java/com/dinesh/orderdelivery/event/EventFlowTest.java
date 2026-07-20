@@ -13,6 +13,7 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.dto.LoginRequest;
 import com.dinesh.orderdelivery.auth.dto.RegisterRequest;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
+import com.dinesh.orderdelivery.delivery.repository.DeliveryRepository;
 import com.dinesh.orderdelivery.event.repository.IntegrationEventLogRepository;
 import com.dinesh.orderdelivery.order.domain.OrderStatus;
 import com.dinesh.orderdelivery.order.dto.CreateOrderItemRequest;
@@ -20,6 +21,7 @@ import com.dinesh.orderdelivery.order.dto.CreateOrderRequest;
 import com.dinesh.orderdelivery.order.dto.OrderStatusUpdateRequest;
 import com.dinesh.orderdelivery.order.repository.OrderItemRepository;
 import com.dinesh.orderdelivery.order.repository.OrderRepository;
+import com.dinesh.orderdelivery.payment.repository.PaymentRepository;
 import com.dinesh.orderdelivery.restaurant.dto.MenuItemRequest;
 import com.dinesh.orderdelivery.restaurant.dto.RestaurantRequest;
 import com.dinesh.orderdelivery.restaurant.repository.MenuItemRepository;
@@ -69,9 +71,17 @@ class EventFlowTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
+
     @BeforeEach
     void cleanDatabase() {
         eventLogRepository.deleteAll();
+        deliveryRepository.deleteAll();
+        paymentRepository.deleteAll();
         orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         menuItemRepository.deleteAll();
@@ -157,4 +167,3 @@ class EventFlowTest {
         return JsonPath.read(result.getResponse().getContentAsString(), "$.data.token");
     }
 }
-

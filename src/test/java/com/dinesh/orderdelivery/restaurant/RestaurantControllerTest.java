@@ -14,8 +14,11 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.dto.LoginRequest;
 import com.dinesh.orderdelivery.auth.dto.RegisterRequest;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
+import com.dinesh.orderdelivery.delivery.repository.DeliveryRepository;
+import com.dinesh.orderdelivery.event.repository.IntegrationEventLogRepository;
 import com.dinesh.orderdelivery.order.repository.OrderItemRepository;
 import com.dinesh.orderdelivery.order.repository.OrderRepository;
+import com.dinesh.orderdelivery.payment.repository.PaymentRepository;
 import com.dinesh.orderdelivery.restaurant.dto.MenuItemRequest;
 import com.dinesh.orderdelivery.restaurant.dto.RestaurantRequest;
 import com.dinesh.orderdelivery.restaurant.repository.MenuItemRepository;
@@ -60,8 +63,20 @@ class RestaurantControllerTest {
     @Autowired
     private OrderRepository orderRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
+
+    @Autowired
+    private IntegrationEventLogRepository eventLogRepository;
+
     @BeforeEach
     void cleanDatabase() {
+        eventLogRepository.deleteAll();
+        deliveryRepository.deleteAll();
+        paymentRepository.deleteAll();
         orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         menuItemRepository.deleteAll();

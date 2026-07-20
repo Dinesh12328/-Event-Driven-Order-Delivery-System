@@ -12,8 +12,11 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.dto.LoginRequest;
 import com.dinesh.orderdelivery.auth.dto.RegisterRequest;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
+import com.dinesh.orderdelivery.delivery.repository.DeliveryRepository;
+import com.dinesh.orderdelivery.event.repository.IntegrationEventLogRepository;
 import com.dinesh.orderdelivery.order.repository.OrderItemRepository;
 import com.dinesh.orderdelivery.order.repository.OrderRepository;
+import com.dinesh.orderdelivery.payment.repository.PaymentRepository;
 import com.dinesh.orderdelivery.restaurant.repository.MenuItemRepository;
 import com.dinesh.orderdelivery.restaurant.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,8 +58,20 @@ class AuthControllerTest {
     @Autowired
     private RestaurantRepository restaurantRepository;
 
+    @Autowired
+    private PaymentRepository paymentRepository;
+
+    @Autowired
+    private DeliveryRepository deliveryRepository;
+
+    @Autowired
+    private IntegrationEventLogRepository eventLogRepository;
+
     @BeforeEach
     void cleanDatabase() {
+        eventLogRepository.deleteAll();
+        deliveryRepository.deleteAll();
+        paymentRepository.deleteAll();
         orderItemRepository.deleteAll();
         orderRepository.deleteAll();
         menuItemRepository.deleteAll();
