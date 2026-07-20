@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     ResponseEntity<ProblemResponse> handleBadRequest(BadRequestException exception, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST, exception.getMessage(), request.getRequestURI(), List.of());
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    ResponseEntity<ProblemResponse> handleAccessDenied(AuthorizationDeniedException exception, HttpServletRequest request) {
+        return build(HttpStatus.FORBIDDEN, "Access denied", request.getRequestURI(), List.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -45,4 +51,3 @@ public class GlobalExceptionHandler {
         return error.getField() + ": " + error.getDefaultMessage();
     }
 }
-
