@@ -55,6 +55,8 @@ app:
     expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
   events:
     kafka-enabled: ${KAFKA_ENABLED:true}
+    topic-partitions: ${KAFKA_TOPIC_PARTITIONS:3}
+    topic-replicas: ${KAFKA_TOPIC_REPLICAS:1}
 
 management:
   endpoints:

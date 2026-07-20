@@ -78,7 +78,7 @@ Import `postman/order-delivery.postman_collection.json`, set `baseUrl`, then reg
 
 ## Deployment
 
-See `DEPLOYMENT.md` for Docker-based online deployment steps using managed PostgreSQL, Redis, and Kafka.
+See `DEPLOYMENT.md` for the detailed free deployment path using Render, Neon PostgreSQL, and Upstash Redis, plus the optional managed Kafka upgrade path.
 
 ## Interview Talking Points
 
