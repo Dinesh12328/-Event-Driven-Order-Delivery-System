@@ -7,17 +7,17 @@ The recommended first deployment is:
 - App hosting: Render Free Web Service
 - PostgreSQL: Neon Free Postgres
 - Redis cache: Upstash Redis Free
-- Kafka: disabled for the first cloud demo with `KAFKA_ENABLED=false`
+- Kafka: disabled for the first low-cost cloud deployment with `KAFKA_ENABLED=false`
 
-Why Kafka is disabled first: managed Kafka is the most complex part of the online setup because providers require extra security properties, certificates, or SASL settings. The application still records domain events in the database event log when Kafka is disabled, so the portfolio demo remains testable online. You can enable real Kafka later.
+Why Kafka is disabled first: managed Kafka is the most complex part of the online setup because providers require extra security properties, certificates, or SASL settings. The application still records domain events in the database event log when Kafka is disabled, so the non-production environment remains testable online. You can enable real Kafka later.
 
 Provider notes were checked on 2026-07-20:
 
-- Render free web services are good for hobby/demo apps, but they spin down when idle.
+- Render free web services are suitable for small non-production services, but they spin down when idle.
 - Render free Postgres expires after 30 days, so Neon is a better free database choice for this project.
 - Neon Free has no time limit and no credit card requirement.
-- Upstash Redis Free is enough for this cache-heavy demo.
-- Aiven Kafka Free is a good later choice for a small real Kafka demo.
+- Upstash Redis Free is enough for this restaurant/menu caching workload.
+- Aiven Kafka Free is a good later choice for a small managed Kafka environment.
 
 Never commit secrets to GitHub and never paste passwords or API keys into chat. Enter credentials only inside provider dashboards such as Render, Neon, and Upstash.
 
@@ -532,7 +532,7 @@ Render will automatically rebuild and redeploy the app from the latest GitHub co
 
 ## Optional: Enable Real Managed Kafka Later
 
-The easiest free managed Kafka option for a demo is Aiven Kafka Free.
+The easiest free managed Kafka option for a low-cost environment is Aiven Kafka Free.
 
 Important limits to remember:
 
@@ -644,4 +644,4 @@ For a real production deployment:
 6. Add monitoring, log retention, alerts, and backups.
 7. Use a stronger secret management workflow for JWT and provider credentials.
 
-The free deployment is best for portfolio demos, learning, interviews, and sharing a live backend URL.
+The free deployment is best for non-production validation, client review, and sharing a live backend URL.

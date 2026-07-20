@@ -23,6 +23,6 @@ public class OpenApiConfig {
                 .info(new Info()
                         .title("Event-Driven Order Delivery API")
                         .version("v1")
-                        .description("Mini food-ordering backend with modular services and Kafka-driven workflows."));
+                        .description("Order delivery backend with modular services, JWT security, and Kafka-ready workflows."));
     }
 }
