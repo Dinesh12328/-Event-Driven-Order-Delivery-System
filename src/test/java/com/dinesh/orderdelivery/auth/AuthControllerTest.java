@@ -12,6 +12,10 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.dto.LoginRequest;
 import com.dinesh.orderdelivery.auth.dto.RegisterRequest;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
+import com.dinesh.orderdelivery.order.repository.OrderItemRepository;
+import com.dinesh.orderdelivery.order.repository.OrderRepository;
+import com.dinesh.orderdelivery.restaurant.repository.MenuItemRepository;
+import com.dinesh.orderdelivery.restaurant.repository.RestaurantRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +43,24 @@ class AuthControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
+    private MenuItemRepository menuItemRepository;
+
+    @Autowired
+    private RestaurantRepository restaurantRepository;
+
     @BeforeEach
     void cleanDatabase() {
+        orderItemRepository.deleteAll();
+        orderRepository.deleteAll();
+        menuItemRepository.deleteAll();
+        restaurantRepository.deleteAll();
         userRepository.deleteAll();
     }
 
@@ -109,4 +129,3 @@ class AuthControllerTest {
         }
     }
 }
-

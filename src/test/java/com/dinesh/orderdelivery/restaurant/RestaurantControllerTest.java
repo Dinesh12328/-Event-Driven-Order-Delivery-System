@@ -14,6 +14,8 @@ import com.dinesh.orderdelivery.auth.domain.Role;
 import com.dinesh.orderdelivery.auth.dto.LoginRequest;
 import com.dinesh.orderdelivery.auth.dto.RegisterRequest;
 import com.dinesh.orderdelivery.auth.repository.UserRepository;
+import com.dinesh.orderdelivery.order.repository.OrderItemRepository;
+import com.dinesh.orderdelivery.order.repository.OrderRepository;
 import com.dinesh.orderdelivery.restaurant.dto.MenuItemRequest;
 import com.dinesh.orderdelivery.restaurant.dto.RestaurantRequest;
 import com.dinesh.orderdelivery.restaurant.repository.MenuItemRepository;
@@ -52,8 +54,16 @@ class RestaurantControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private OrderItemRepository orderItemRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
     @BeforeEach
     void cleanDatabase() {
+        orderItemRepository.deleteAll();
+        orderRepository.deleteAll();
         menuItemRepository.deleteAll();
         restaurantRepository.deleteAll();
         userRepository.deleteAll();
@@ -169,4 +179,3 @@ class RestaurantControllerTest {
         return JsonPath.read(result.getResponse().getContentAsString(), "$.data.token");
     }
 }
-
