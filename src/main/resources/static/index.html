@@ -23,7 +23,10 @@
                 Password
                 <input id="password" type="password" autocomplete="current-password" value="Password123!">
             </label>
-            <button type="submit">Login</button>
+            <div class="auth-actions">
+                <button type="submit" id="loginButton">Login</button>
+                <button type="button" id="createAdminButton">Create admin</button>
+            </div>
             <p id="authState" class="state-line">Token not loaded</p>
         </form>
     </section>
@@ -78,4 +81,3 @@
 <script src="/assets/app.js"></script>
 </body>
 </html>
-

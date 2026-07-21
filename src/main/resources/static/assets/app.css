@@ -128,6 +128,17 @@ h2 {
     gap: 12px;
 }
 
+.auth-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
 label {
     color: var(--muted);
     display: grid;
@@ -280,4 +291,3 @@ canvas {
         flex-direction: column;
     }
 }
-

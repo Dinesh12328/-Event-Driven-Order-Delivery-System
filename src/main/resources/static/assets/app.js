@@ -20,9 +20,46 @@ const ctx = canvas.getContext("2d");
 
 document.getElementById("loginForm").addEventListener("submit", async (event) => {
     event.preventDefault();
+    await login();
+});
+
+document.getElementById("createAdminButton").addEventListener("click", async () => {
     const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
+    const button = document.getElementById("createAdminButton");
     try {
+        button.disabled = true;
+        setText("authState", "Creating admin");
+        await api("/api/auth/register", {
+            method: "POST",
+            body: JSON.stringify({
+                fullName: "Admin One",
+                email,
+                password,
+                role: "ADMIN"
+            })
+        }, false);
+        setText("authState", "Admin created. Logging in");
+        await login();
+    } catch (error) {
+        const message = error.message.includes("already registered")
+                ? "Admin already exists. Try Login"
+                : error.message;
+        setText("authState", message);
+    } finally {
+        button.disabled = false;
+    }
+});
+
+document.getElementById("refresh").addEventListener("click", refresh);
+
+async function login() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    const button = document.getElementById("loginButton");
+    try {
+        button.disabled = true;
+        setText("authState", "Logging in");
         const response = await api("/api/auth/login", {
             method: "POST",
             body: JSON.stringify({ email, password })
@@ -33,10 +70,10 @@ document.getElementById("loginForm").addEventListener("submit", async (event) =>
         await refresh();
     } catch (error) {
         setText("authState", error.message);
+    } finally {
+        button.disabled = false;
     }
-});
-
-document.getElementById("refresh").addEventListener("click", refresh);
+}
 
 async function refresh() {
     await health();
@@ -54,7 +91,7 @@ async function health() {
 
 async function dashboard() {
     if (!state.token) {
-        setText("authState", "Login with an admin token");
+        setText("authState", "Create admin once, then login");
         return;
     }
     try {
@@ -296,6 +333,7 @@ requestAnimationFrame(draw);
 
 if (state.token) {
     setText("authState", "Token loaded");
+} else {
+    setText("authState", "Create admin once, then login");
 }
 refresh();
-

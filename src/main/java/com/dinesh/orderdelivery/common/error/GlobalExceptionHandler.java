@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +33,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ProblemResponse> handleSecurityAccessDenied(AccessDeniedException exception, HttpServletRequest request) {
         return build(HttpStatus.FORBIDDEN, "Access denied", request.getRequestURI(), List.of());
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    ResponseEntity<ProblemResponse> handleAuthentication(AuthenticationException exception, HttpServletRequest request) {
+        return build(HttpStatus.UNAUTHORIZED, "Invalid email or password", request.getRequestURI(), List.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

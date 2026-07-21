@@ -113,6 +113,15 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.data", hasSize(2)));
     }
 
+    @Test
+    void invalidLoginReturnsUnauthorized() throws Exception {
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new LoginRequest("admin@example.com", "Password123!"))))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message", is("Invalid email or password")));
+    }
+
     private ResultActionsAdapter register(String name, String email, Role role) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
