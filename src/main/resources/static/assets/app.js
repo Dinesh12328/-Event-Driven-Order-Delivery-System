@@ -52,6 +52,7 @@ document.getElementById("createAdminButton").addEventListener("click", async () 
 });
 
 document.getElementById("refresh").addEventListener("click", refresh);
+document.getElementById("runScenario").addEventListener("click", runScenario);
 
 async function login() {
     const email = document.getElementById("email").value;
@@ -78,6 +79,28 @@ async function login() {
 async function refresh() {
     await health();
     await Promise.all([dashboard(), events(), restaurants()]);
+}
+
+async function runScenario() {
+    const button = document.getElementById("runScenario");
+    if (!state.token) {
+        setText("journeyState", "Login as admin first");
+        return;
+    }
+    try {
+        button.disabled = true;
+        setText("journeyState", "Running");
+        renderJourneySteps(["Starting full order journey"]);
+        const response = await api("/api/admin/scenarios/order-journey", { method: "POST" });
+        setText("journeyState", "Completed");
+        renderJourney(response.data);
+        await refresh();
+    } catch (error) {
+        setText("journeyState", "Failed");
+        renderJourneySteps([error.message]);
+    } finally {
+        button.disabled = false;
+    }
 }
 
 async function health() {
@@ -186,6 +209,43 @@ function renderRestaurants(restaurants) {
     });
 }
 
+function renderJourney(journey) {
+    const target = document.getElementById("journeyResult");
+    target.innerHTML = "";
+    const summary = document.createElement("div");
+    summary.className = "journey-summary";
+    summary.append(metric("Restaurant", journey.restaurant.name));
+    summary.append(metric("Order", shortId(journey.order.id)));
+    summary.append(metric("Order status", journey.order.status));
+    summary.append(metric("Payment", journey.payment.status));
+    summary.append(metric("Delivery", journey.delivery.status));
+    summary.append(metric("Total", money(journey.order.totalPrice)));
+    target.append(summary);
+    renderJourneySteps(journey.completedSteps || []);
+}
+
+function renderJourneySteps(steps) {
+    const target = document.getElementById("journeyResult");
+    let list = target.querySelector(".journey-steps");
+    if (!list) {
+        list = document.createElement("ol");
+        list.className = "journey-steps";
+        target.append(list);
+    }
+    list.innerHTML = "";
+    steps.forEach((step) => {
+        const item = document.createElement("li");
+        item.textContent = step;
+        list.append(item);
+    });
+}
+
+function metric(label, value) {
+    const node = document.createElement("article");
+    node.innerHTML = `<span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong>`;
+    return node;
+}
+
 function row(title, detail, badge) {
     const node = document.createElement("div");
     node.className = "row";
@@ -206,6 +266,10 @@ function setText(id, value) {
 
 function money(value) {
     return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR" }).format(value || 0);
+}
+
+function shortId(value) {
+    return String(value || "").slice(0, 8);
 }
 
 function escapeHtml(value) {

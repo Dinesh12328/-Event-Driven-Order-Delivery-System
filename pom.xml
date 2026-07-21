@@ -15,7 +15,7 @@
     <artifactId>event-driven-order-delivery</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Event Driven Order Delivery System</name>
-    <description>Mini Swiggy/Zomato-style backend with event-driven order delivery workflows.</description>
+    <description>Event-driven backend for order delivery, payment simulation, delivery assignment, and operational monitoring.</description>
 
     <properties>
         <java.version>21</java.version>

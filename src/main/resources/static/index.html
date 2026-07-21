@@ -47,11 +47,22 @@
                 <h2>Order Journey</h2>
             </div>
             <div class="actions">
+                <button id="runScenario" type="button">Run full journey</button>
                 <button id="refresh">Refresh</button>
                 <a href="/swagger-ui.html">Swagger</a>
             </div>
         </div>
         <canvas id="flowCanvas" width="1200" height="520" aria-label="Animated order event flow"></canvas>
+    </section>
+
+    <section class="journey-panel">
+        <div class="panel-heading">
+            <h2>Order Journey Runner</h2>
+            <span id="journeyState">Waiting for admin login</span>
+        </div>
+        <div id="journeyResult" class="journey-result">
+            <div class="empty">Run a full order journey to create sample users, restaurant, menu, order, payment, delivery, and event records.</div>
+        </div>
     </section>
 
     <section class="lower-grid">

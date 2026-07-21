@@ -22,6 +22,7 @@ Backend service for managing restaurant ordering, payment simulation, delivery a
 - Track delivery status and synchronize it with order progress.
 - Publish or locally audit order, payment, delivery, and notification events.
 - Expose admin metrics, recent orders, and integration event history.
+- Run an admin-only order journey scenario from the browser to validate the complete workflow.
 - Provide an interactive dashboard UI and Swagger API documentation.
 
 ## Architecture
@@ -141,6 +142,7 @@ See `DEPLOYMENT.md` for the full deployment guide.
 - `PATCH /api/deliveries/{orderId}/status`
 - `GET /api/admin/dashboard`
 - `GET /api/admin/events`
+- `POST /api/admin/scenarios/order-journey`
 
 ## Testing
 

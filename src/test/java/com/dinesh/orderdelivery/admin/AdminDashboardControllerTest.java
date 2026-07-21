@@ -1,6 +1,7 @@
 package com.dinesh.orderdelivery.admin;
 
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.greaterThan;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -92,6 +93,33 @@ class AdminDashboardControllerTest {
                 .andExpect(jsonPath("$.data.orders", is(0)));
     }
 
+    @Test
+    void adminScenarioRunsCompleteOrderJourney() throws Exception {
+        String customerToken = tokenFor("Customer One", "customer@example.com", Role.CUSTOMER);
+        mockMvc.perform(post("/api/admin/scenarios/order-journey")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + customerToken))
+                .andExpect(status().isForbidden());
+
+        String adminToken = tokenFor("Admin One", "admin@example.com", Role.ADMIN);
+        mockMvc.perform(post("/api/admin/scenarios/order-journey")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.order.status", is("DELIVERED")))
+                .andExpect(jsonPath("$.data.payment.status", is("SUCCESS")))
+                .andExpect(jsonPath("$.data.delivery.status", is("DELIVERED")))
+                .andExpect(jsonPath("$.data.completedSteps.length()", is(8)));
+
+        mockMvc.perform(get("/api/admin/dashboard")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + adminToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.users", is(5)))
+                .andExpect(jsonPath("$.data.restaurants", is(1)))
+                .andExpect(jsonPath("$.data.orders", is(1)))
+                .andExpect(jsonPath("$.data.payments", is(1)))
+                .andExpect(jsonPath("$.data.deliveries", is(1)))
+                .andExpect(jsonPath("$.data.integrationEvents", greaterThan(0)));
+    }
+
     private String tokenFor(String name, String email, Role role) throws Exception {
         mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -105,4 +133,3 @@ class AdminDashboardControllerTest {
         return JsonPath.read(result.getResponse().getContentAsString(), "$.data.token");
     }
 }
-
