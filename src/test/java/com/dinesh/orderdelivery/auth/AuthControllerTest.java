@@ -122,6 +122,16 @@ class AuthControllerTest {
                 .andExpect(jsonPath("$.message", is("Invalid email or password")));
     }
 
+    @Test
+    void duplicateRegistrationReturnsBadRequest() throws Exception {
+        register("Admin One", "admin@example.com", Role.ADMIN)
+                .andExpect(status().isCreated());
+
+        register("Admin Copy", "ADMIN@example.com", Role.ADMIN)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message", is("Email is already registered")));
+    }
+
     private ResultActionsAdapter register(String name, String email, Role role) throws Exception {
         MvcResult result = mockMvc.perform(post("/api/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)

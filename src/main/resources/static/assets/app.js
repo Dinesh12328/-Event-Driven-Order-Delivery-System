@@ -30,7 +30,7 @@ document.getElementById("createAdminButton").addEventListener("click", async () 
     try {
         button.disabled = true;
         setText("authState", "Creating admin");
-        await api("/api/auth/register", {
+        const response = await api("/api/auth/register", {
             method: "POST",
             body: JSON.stringify({
                 fullName: "Admin One",
@@ -39,8 +39,9 @@ document.getElementById("createAdminButton").addEventListener("click", async () 
                 role: "ADMIN"
             })
         }, false);
-        setText("authState", "Admin created. Logging in");
-        await login();
+        applyAuth(response.data);
+        setText("authState", "Admin created and logged in");
+        refreshInBackground();
     } catch (error) {
         const message = error.message.includes("already registered")
                 ? "Admin already exists. Try Login"
@@ -65,15 +66,26 @@ async function login() {
             method: "POST",
             body: JSON.stringify({ email, password })
         }, false);
-        state.token = response.data.token;
-        localStorage.setItem(tokenKey, state.token);
+        applyAuth(response.data);
         setText("authState", `Logged in as ${response.data.user.role}`);
-        await refresh();
+        refreshInBackground();
     } catch (error) {
         setText("authState", error.message);
     } finally {
         button.disabled = false;
     }
+}
+
+function applyAuth(authData) {
+    state.token = authData.token;
+    localStorage.setItem(tokenKey, state.token);
+}
+
+function refreshInBackground() {
+    setText("journeyState", "Syncing dashboard");
+    refresh()
+            .then(() => setText("journeyState", "Ready"))
+            .catch((error) => setText("journeyState", error.message));
 }
 
 async function refresh() {
